@@ -1,0 +1,10 @@
+binsrc
+bintest
+build
+lib
+dist
+skeleton
+jobs
+.settings
+.classpath
+.project

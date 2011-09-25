@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Job Master" default="build">
+
+	<property name="build.dir" location="binsrc/" />
+	<property name="src.dir" location="src" />
+	<property name="test.build.dir" location="bintest/" />
+	<property name="test.src.dir" location="test/" />
+	<property name="dist.dir" location="dist/" />
+	<property name="jobmaster.jar" location="jobmaster.jar" />
+
+	<target name="build" depends="jar" description="Builds the server.">
+		<mkdir dir="${dist.dir}" />
+		<move file="${jobmaster.jar}" todir="${dist.dir}" />
+	</target>
+
+	<target name="compile" depends="clean" description="compile the Java source code to class files">
+		<mkdir dir="${build.dir}" />
+		<javac srcdir="${src.dir}" includeantruntime="false" destdir="${build.dir}">
+			<classpath>
+				<pathelement location="${build.dir}" />
+			</classpath>
+		</javac>
+		<mkdir dir="${test.build.dir}" />
+		<javac srcdir="${test.src.dir}" includeantruntime="false" destdir="${test.build.dir}">
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<pathelement location="lib/junit-4.9.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="compile">
+		<junit fork="true" forkmode="once" haltonfailure="true" haltonerror="true" failureproperty="tests.failures" errorproperty="tests.errors" includeantruntime="true" showoutput="true" printsummary="true">
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<pathelement location="${test.build.dir}" />
+				<pathelement location="lib/junit-4.9.jar" />
+			</classpath>
+			<batchtest fork="no" todir="${test.build.dir}">
+				<fileset dir="${test.build.dir}">
+					<include name="**/Test*.class" />
+				</fileset>
+			</batchtest>
+
+		</junit>
+	</target>
+
+	<target name="jar" depends="compile" description="create a Jar file for the application">
+		<jar destfile="${jobmaster.jar}" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="jobmaster.JobMaster" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${test.build.dir}" />
+	</target>
+
+</project>
