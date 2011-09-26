@@ -1,14 +1,12 @@
 package jobmaster;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +16,8 @@ public class TestJobManager {
 	public void runBefore() {
 		File jobDir = new File("jobs");		
 		delete(jobDir);
+		File skeletonDir = new File("skeleton");
+		delete(skeletonDir);
 	}
 	
 	private static boolean delete(File oFile) {
@@ -92,6 +92,23 @@ public class TestJobManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void testSaveJobCopiesSkeleton() {
+		File skeletonDir = new File("skeleton");
+		skeletonDir.mkdir();
+		File bone = new File("skeleton/bone1");
+		try {
+			bone.createNewFile();
+		} catch (IOException e) {
+			fail("Failed to prepare skeleton directory.");
+		}
+		
+		Job job = new Job("New job.");
+		JobManager.saveJob(job);
+		boolean result = new File("jobs/1/bone1").exists();
+		assertTrue("File should exist.", result);
 	}
 	
 }

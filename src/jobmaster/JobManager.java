@@ -1,8 +1,11 @@
 package jobmaster;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -12,7 +15,8 @@ public class JobManager {
 		String newJobDirName = String.valueOf(getNewJobId());
 		File mainDir = new File("jobs/" + newJobDirName);
 		mainDir.mkdirs();
-		File propertiesFile = new File("jobs/" + newJobDirName + "/job.properties");
+		File propertiesFile = new File("jobs/" + newJobDirName
+				+ "/job.properties");
 		Properties prop = job.getProperties();
 		prop.setProperty("id", newJobDirName);
 		try {
@@ -22,9 +26,50 @@ public class JobManager {
 		} catch (IOException e) {
 			// TODO
 		}
+
+		File skeletonDir = new File("skeleton");
+		if (skeletonDir.isDirectory()) {
+			String[] list = skeletonDir.list();
+			for (String bone : list) {
+				File boneFile = new File("skeleton/" + bone);
+				if (boneFile.exists()) {
+					copyFile(boneFile, new File("jobs/" + newJobDirName + "/" + bone));
+				}
+			}
+		}
 	}
 
-	private static int getNewJobId() {		
+	private static void copyFile(File source, File dest) {
+		if (!source.exists()) {
+			return;
+		}
+
+		if (dest.exists()) {
+			dest.delete();
+		}
+		
+		try {
+			dest.createNewFile();
+	
+			FileChannel sourceCh = null;
+			FileChannel destinationCh = null;
+			sourceCh = new FileInputStream(source).getChannel();
+			destinationCh = new FileOutputStream(dest).getChannel();
+			if (destinationCh != null && sourceCh != null) {
+				destinationCh.transferFrom(sourceCh, 0, sourceCh.size());
+			}
+			if (sourceCh != null) {
+				sourceCh.close();
+			}
+			if (destinationCh != null) {
+				destinationCh.close();
+			}
+		} catch (IOException e) {
+			// TODO
+		}
+	}
+
+	private static int getNewJobId() {
 		File mainDir = new File("jobs");
 		if (!mainDir.isDirectory()) {
 			return 1;
