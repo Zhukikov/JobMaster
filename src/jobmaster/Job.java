@@ -114,19 +114,6 @@ public class Job {
 		return null;
 	}
 	
-	public static List<Job> getJobs() {
-		File jobsDir = new File (JOBS_DIR_NAME + "/");
-		if (!jobsDir.isDirectory()) {
-			return new ArrayList<Job>();
-		}
-		String[] list = jobsDir.list();
-		ArrayList<Job> result = new ArrayList<Job>();
-		for (String jobName : list) {
-			result.add(new Job(new File(JOBS_DIR_NAME + "/" + jobName)));
-		}
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Job) {
@@ -139,6 +126,19 @@ public class Job {
 	public int hashCode() {
 		// TODO Auto-generated method stub
 		return this.properties.hashCode();
+	}
+
+	public static List<Job> getJobs() {
+		File jobsDir = new File (JOBS_DIR_NAME + "/");
+		if (!jobsDir.isDirectory()) {
+			return new ArrayList<Job>();
+		}
+		String[] list = jobsDir.list();
+		ArrayList<Job> result = new ArrayList<Job>();
+		for (String jobName : list) {
+			result.add(new Job(new File(JOBS_DIR_NAME + "/" + jobName)));
+		}
+		return result;
 	}
 
 }
