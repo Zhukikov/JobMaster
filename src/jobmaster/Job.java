@@ -10,6 +10,7 @@ public class Job {
 
 	private static final String JOBS_DIR_NAME = "jobs";
 	private static final String JOB_PROPERTIES_NAME = "job.properties";
+	private static final String HISTORY_NAME = "history.log";
 
 	private Properties properties;
 
@@ -67,6 +68,20 @@ public class Job {
 
 	public String getTitle() {
 		return this.properties.getProperty("title");
+	}
+
+	public void addHistory(String string) {
+		String id = this.properties.getProperty("id");
+
+		File file = new File(JOBS_DIR_NAME + "/" + id + "/" + HISTORY_NAME);
+		try {
+			file.createNewFile();
+			FileWriter fw = new FileWriter(file, true);
+			fw.write(string + "\n");
+			fw.close();
+		} catch (IOException e) {
+			// TODO
+		}
 	}
 
 }

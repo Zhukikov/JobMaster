@@ -130,4 +130,32 @@ public class TestJob {
 		assertEquals("Strings should be equal", expected, result);
 	}
 	
+	@Test
+	public void testAddHistoryToExistingJobCreatesFile() {
+		Job job = Job.saveJob("New job.");
+		job.addHistory("New history line.");
+		File file = new File("jobs/1/history.log");
+		assertTrue("File should exist.", file.exists());
+	}
+	
+	@Test
+	public void testAddHistoryToExistingJobAppendsToFile() {
+		Job job = Job.saveJob("New job.");
+		job.addHistory("1");
+		job.addHistory("2");
+		File file = new File("jobs/1/history.log");
+		long size = file.length();
+		assertEquals("Size should be equal to 4", 4, size);
+	}
+	
+	@Test
+	public void testAddHistoryToSecondJob() {
+		Job job1 = Job.saveJob("First job.");
+		Job job2 = Job.saveJob("Second job.");
+		job1.addHistory("first");
+		job2.addHistory("second");
+		File file = new File("jobs/2/history.log");
+		assertTrue("File should exist.", file.exists());
+	}
+	
 }
