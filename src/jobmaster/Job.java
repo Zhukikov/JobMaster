@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class Job {
@@ -28,8 +30,6 @@ public class Job {
 	public Job(File jobDir) {
 		try {
 			FileReader fr = new FileReader(jobDir.getAbsolutePath() + "/"
-					+ JOB_PROPERTIES_NAME);
-			System.out.println(jobDir.getAbsolutePath() + "/"
 					+ JOB_PROPERTIES_NAME);
 			this.properties = new Properties();
 			this.properties.load(fr);
@@ -121,6 +121,19 @@ public class Job {
 			return this.properties.equals(((Job) obj).getProperties());
 		}
 		return false;
+	}
+
+	public static List<Job> getJobs() {
+		File jobsDir = new File (JOBS_DIR_NAME + "/");
+		if (!jobsDir.isDirectory()) {
+			return new ArrayList<Job>();
+		}
+		String[] list = jobsDir.list();
+		ArrayList<Job> result = new ArrayList<Job>();
+		for (String jobName : list) {
+			result.add(new Job(new File(JOBS_DIR_NAME + "/" + jobName)));
+		}
+		return result;
 	}
 
 }

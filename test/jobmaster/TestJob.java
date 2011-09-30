@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import org.junit.Before;
@@ -176,6 +177,20 @@ public class TestJob {
 		Job job1 = Job.saveJob("New job.");
 		Job job2 = Job.getJob(1);
 		assertEquals("Should be equal.", job1, job2);
+	}
+	
+	@Test
+	public void testGetAllJobsWhenNoJobs() {
+		List<Job> jobs = Job.getJobs();
+		assertEquals("Size should be 0.", 0, jobs.size());
+	}
+	
+	@Test
+	public void testGetAllJobsWhenTwoJobs() {
+		Job.saveJob("New job 1.");
+		Job.saveJob("New job 2.");
+		List<Job> jobs = Job.getJobs();
+		assertEquals("Size should be 2.", 2, jobs.size());
 	}
 	
 }
