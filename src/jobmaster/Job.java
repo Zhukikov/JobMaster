@@ -1,6 +1,8 @@
 package jobmaster;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,6 +23,21 @@ public class Job {
 			this.properties.setProperty("title", newTitle);
 		else
 			this.properties.setProperty("title", "");
+	}
+
+	public Job(File jobDir) {
+		try {
+			FileReader fr = new FileReader(jobDir.getAbsolutePath() + "/"
+					+ JOB_PROPERTIES_NAME);
+			System.out.println(jobDir.getAbsolutePath() + "/"
+					+ JOB_PROPERTIES_NAME);
+			this.properties = new Properties();
+			this.properties.load(fr);
+			fr.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void saveProperties() {
@@ -82,6 +99,28 @@ public class Job {
 		} catch (IOException e) {
 			// TODO
 		}
+	}
+
+	public static Job getJob(int i) {
+		File jobsDir = new File(JOBS_DIR_NAME);
+		if (!jobsDir.isDirectory()) {
+			return null;
+		}
+		String[] list = jobsDir.list();
+		for (String jobName : list) {
+			if (jobName.equals("" + i)) {
+				return new Job(new File(JOBS_DIR_NAME + "/" + jobName));
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Job) {
+			return this.properties.equals(((Job) obj).getProperties());
+		}
+		return false;
 	}
 
 }

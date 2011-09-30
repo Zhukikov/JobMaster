@@ -158,4 +158,24 @@ public class TestJob {
 		assertTrue("File should exist.", file.exists());
 	}
 	
+	@Test
+	public void testGetJobDoesNotExist() {
+		Job job = Job.getJob(1);
+		assertNull("Should be null.", job);
+	}
+	
+	@Test
+	public void testGetJobExists() {
+		Job.saveJob("New job.");
+		Job job = Job.getJob(1);
+		assertNotNull("Should not be null.", job);
+	}
+	
+	@Test
+	public void testGetJobReturnsSameJob() {
+		Job job1 = Job.saveJob("New job.");
+		Job job2 = Job.getJob(1);
+		assertEquals("Should be equal.", job1, job2);
+	}
+	
 }
