@@ -8,18 +8,20 @@ import java.nio.channels.FileChannel;
 
 public class Skeleton {
 
+	private static final String SKELETON_DIR_NAME = "skeleton";
+
 	public static void copyFiles(String dir) {
-		File skeletonDir = new File("skeleton");
+		File skeletonDir = new File(SKELETON_DIR_NAME);
 		if (!skeletonDir.isDirectory()) {
 			return;
 		}
-		
+
 		String[] list = skeletonDir.list();
 		for (String bone : list) {
-			File boneFile = new File("skeleton/" + bone);			
-			copyFile(boneFile, new File(dir + "/" + bone));			
+			File boneFile = new File(SKELETON_DIR_NAME + "/" + bone);
+			copyFile(boneFile, new File(dir + "/" + bone));
 		}
-		
+
 	}
 
 	private static void copyFile(File source, File dest) {
