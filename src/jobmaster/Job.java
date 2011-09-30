@@ -1,7 +1,6 @@
 package jobmaster;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -115,14 +114,6 @@ public class Job {
 		return null;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Job) {
-			return this.properties.equals(((Job) obj).getProperties());
-		}
-		return false;
-	}
-
 	public static List<Job> getJobs() {
 		File jobsDir = new File (JOBS_DIR_NAME + "/");
 		if (!jobsDir.isDirectory()) {
@@ -134,6 +125,20 @@ public class Job {
 			result.add(new Job(new File(JOBS_DIR_NAME + "/" + jobName)));
 		}
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Job) {
+			return this.properties.equals(((Job) obj).getProperties());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return this.properties.hashCode();
 	}
 
 }
