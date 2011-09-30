@@ -37,11 +37,12 @@ public class Job {
 
 	public static Job saveJob(String title) {
 		int id = getNewJobId();
-		File jobDir = new File(JOBS_DIR_NAME + "/" + id);
+		String jobDirName = JOBS_DIR_NAME + "/" + id;
+		File jobDir = new File(jobDirName);
 		jobDir.mkdirs();
 		Job job = new Job(id, title);
 		job.saveProperties();
-		Skeleton.copyFiles(id);
+		Skeleton.copyFiles(jobDirName);
 		return job;
 
 	}
