@@ -131,4 +131,24 @@ public class TestJobManager {
 		assertEquals("Size should be equal to 4", 4, size);
 	}
 	
+	@Test
+	public void  testAddHistoryToNonExistingJobShouldNotCreateFile() {
+		Job job = new Job("New job.");
+		JobManager.addHistory(job, "New line.");
+		File file = new File("jobs/1/history.log");
+		assertFalse("File should not exist.", file.exists());
+	}
+	
+	@Test
+	public void testAddHistoryToSecondJob() {
+		Job job1 = new Job("First job.");
+		Job job2 = new Job("Second job.");
+		JobManager.saveJob(job1);
+		JobManager.saveJob(job2);
+		JobManager.addHistory(job1, "first");
+		JobManager.addHistory(job2, "second");
+		File file = new File("jobs/2/history.log");
+		assertTrue("File should exist.", file.exists());
+	}
+	
 }

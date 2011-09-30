@@ -84,7 +84,11 @@ public class JobManager {
 	}
 
 	public static void addHistory(Job job, String string) {
-		File file = new File("jobs/1/history.log");
+		String id = job.getProperties().getProperty("id");
+		if (id == null || id.equals("")) {
+			return;
+		}
+		File file = new File("jobs/" + id + "/history.log");
 		try {
 			file.createNewFile();
 			FileWriter fw = new FileWriter(file, true);
