@@ -111,4 +111,24 @@ public class TestJobManager {
 		assertTrue("File should exist.", result);
 	}
 	
+	@Test
+	public void testAddHistoryToExistingJobCreatesFile() {
+		Job job = new Job("New job.");
+		JobManager.saveJob(job);
+		JobManager.addHistory(job, "New history line.");
+		File file = new File("jobs/1/history.log");
+		assertTrue("File should exist.", file.exists());
+	}
+	
+	@Test
+	public void testAddHistoryToExistingJobAppendsToFile() {
+		Job job = new Job("New job.");
+		JobManager.saveJob(job);
+		JobManager.addHistory(job, "1");
+		JobManager.addHistory(job, "2");
+		File file = new File("jobs/1/history.log");
+		long size = file.length();
+		assertEquals("Size should be equal to 4", 4, size);
+	}
+	
 }

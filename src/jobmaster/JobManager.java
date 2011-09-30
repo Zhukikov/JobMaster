@@ -83,4 +83,16 @@ public class JobManager {
 		return ++lastId;
 	}
 
+	public static void addHistory(Job job, String string) {
+		File file = new File("jobs/1/history.log");
+		try {
+			file.createNewFile();
+			FileWriter fw = new FileWriter(file, true);
+			fw.write(string + "\n");
+			fw.close();
+		} catch (IOException e) {
+			// TODO
+		}
+	}
+
 }
