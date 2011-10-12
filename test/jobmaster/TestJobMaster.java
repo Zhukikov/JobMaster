@@ -10,6 +10,7 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -43,7 +44,7 @@ public class TestJobMaster {
 
 	private static Object findComponent(Component[] components, String name) {
 		for (Component comp : components) {
-			if (comp.getName().equals(name)) {
+			if (comp.getName() != null && comp.getName().equals(name)) {
 				return comp;
 			}
 			if (comp instanceof JScrollPane) {
@@ -156,7 +157,52 @@ public class TestJobMaster {
 				.getComponents(), "job-list");
 		int size = jobList.getModel().getSize();
 		newJobButton.doClick();
-		assertEquals("Should have one more element.", size + 1, jobList.getModel().getSize());
+		assertEquals("Should have one more element.", size + 1, jobList
+				.getModel().getSize());
+	}
+
+	@Test
+	public void testJobDetailsPanelShowing() {
+		JPanel jobDetails = (JPanel) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-details");
+		assertNotNull("JPanel should not be null.", jobDetails);
+	}
+
+	@Test
+	public void testJobDetailsIdLabelShowing() {
+		JLabel jobId = (JLabel) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-details-id");
+		assertNotNull("JLabel should not be null.", jobId);
+	}
+
+	@Test
+	public void testJobIdChangesWhenJobClickedInTheList() {
+		JList jobList = (JList) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-list");
+		JLabel jobId = (JLabel) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-details-id");
+		JButton newJobButton = (JButton) findComponent(this.jm.getContentPane()
+				.getComponents(), "new-job-button");
+		newJobButton.doClick();
+		jobList.setSelectedIndex(0);
+		assertEquals("Label text should change to 1", "1", jobId.getText());
+	}
+
+	@Test
+	public void testJobTitleChangesWhenJobClickedInTheList() {
+		JList jobList = (JList) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-list");
+		JTextField jobTitle = (JTextField) findComponent(this.jm
+				.getContentPane().getComponents(), "job-details-title");
+		JButton newJobButton = (JButton) findComponent(this.jm.getContentPane()
+				.getComponents(), "new-job-button");
+		JTextField newJobTextField = (JTextField) findComponent(this.jm
+				.getContentPane().getComponents(), "new-job-textfield");
+		newJobTextField.setText("New job.");
+		newJobButton.doClick();
+		jobList.setSelectedIndex(0);
+		assertEquals("TextField text should change", "New job.",
+				jobTitle.getText());
 	}
 
 }
