@@ -10,7 +10,9 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.junit.Before;
@@ -44,7 +46,13 @@ public class TestJobMaster {
 			if (comp.getName().equals(name)) {
 				return comp;
 			}
-			if (comp instanceof Container) {
+			if (comp instanceof JScrollPane) {
+				Object result2 = findComponent(((JScrollPane) comp)
+						.getViewport().getComponents(), name);
+				if (result2 != null) {
+					return result2;
+				}
+			} else if (comp instanceof Container) {
 				Object result2 = findComponent(
 						((Container) comp).getComponents(), name);
 				if (result2 != null) {
@@ -56,7 +64,7 @@ public class TestJobMaster {
 	}
 
 	@Test
-	public void testWindowIsShowing() {		
+	public void testWindowIsShowing() {
 		this.jm.setVisible(true);
 		assertTrue("Should be visible", this.jm.isShowing());
 	}
@@ -119,6 +127,36 @@ public class TestJobMaster {
 	public void testCloseButton() {
 		assertEquals("Should be equal.", JFrame.EXIT_ON_CLOSE,
 				this.jm.getDefaultCloseOperation());
+	}
+
+	@Test
+	public void testJobListEmptyOnStart() {
+		JList jobList = (JList) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-list");
+		int size = jobList.getModel().getSize();
+		assertEquals("Should be empty.", 0, size);
+
+	}
+
+	@Test
+	public void testJobListNotEmptyOnStart() {
+		Job.saveJob("aaa");
+		this.jm = new JobMaster();
+		JList jobList = (JList) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-list");
+		int size = jobList.getModel().getSize();
+		assertEquals("Should have one element.", 1, size);
+	}
+
+	@Test
+	public void testNewJobAddsToTheList() {
+		JButton newJobButton = (JButton) findComponent(this.jm.getContentPane()
+				.getComponents(), "new-job-button");
+		JList jobList = (JList) findComponent(this.jm.getContentPane()
+				.getComponents(), "job-list");
+		int size = jobList.getModel().getSize();
+		newJobButton.doClick();
+		assertEquals("Should have one more element.", size + 1, jobList.getModel().getSize());
 	}
 
 }
